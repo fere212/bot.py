@@ -23,9 +23,8 @@ import threading
 import time
 from telebot import types
 
-stopuser = {}
-token = "77774913762:AAHUuEte1j0yQVdMz6KKzn-c7K4AIuGsFhY"
-bot=telebot.TeleBot(token,parse_mode="HTML")
+TOKEN = os.getenv("BOT_TOKEN")
+bot = Bot(token=TOKEN)
 
 
 admin=7457947976
