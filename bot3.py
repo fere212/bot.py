@@ -2,7 +2,7 @@ import os
 import telebot
 import re,json
 import requests
-import telebot,time,random
+time,random
 import random
 import string
 from telebot import types
