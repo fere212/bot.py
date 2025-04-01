@@ -4,5 +4,6 @@ python-dotenv
 colorama
 beautifulsoup4
 pyfiglet
+fake-useragent
 
 
