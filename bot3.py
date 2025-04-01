@@ -26,8 +26,12 @@ import time
 from telebot import types
 
 
-load_dotenv()  # .env dosyasını yükler
-BOT_TOKEN = os.getenv('BOT_TOKEN')  # BOT_TOKEN'ı .env dosyasından alır
+
+load_dotenv()  # .env dosyasını yükle
+BOT_TOKEN = os.getenv('BOT_TOKEN')
+
+# Bot nesnesini tanımlayın
+bot = telebot.TeleBot(BOT_TOKEN)
 
 admin=7457947976
 
