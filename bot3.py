@@ -1,4 +1,6 @@
-
+import os
+from dotenv import load_dotenv
+import telebot
 import re,json
 import requests
 import telebot,time,random
@@ -23,9 +25,16 @@ import threading
 import time
 from telebot import types
 
-TOKEN = os.getenv("BOT_TOKEN")
-bot = Bot(token=TOKEN)
 
+
+# .env dosyasını yükle
+load_dotenv("bot_token.env")
+
+# Token'i oku
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+
+# Botu başlat
+bot = telebot.TeleBot(BOT_TOKEN)
 
 admin=7457947976
 
