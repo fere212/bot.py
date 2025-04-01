@@ -3,5 +3,6 @@ user_agent==0.1.10
 python-dotenv
 colorama
 beautifulsoup4
+pyfiglet
 
 
