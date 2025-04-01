@@ -1,5 +1,4 @@
 import os
-from dotenv import load_dotenv
 import telebot
 import re,json
 import requests
@@ -15,6 +14,7 @@ from ba import *#1$ check
 #from sa import *
 
 from reg import reg
+from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from faker import Faker
 from multiprocessing import Process
@@ -26,15 +26,8 @@ import time
 from telebot import types
 
 
-
-# .env dosyasını yükle
-load_dotenv("bot_token.env")
-
-# Token'i oku
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-
-# Botu başlat
-bot = telebot.TeleBot(BOT_TOKEN)
+load_dotenv()  # .env dosyasını yükler
+BOT_TOKEN = os.getenv('BOT_TOKEN')  # BOT_TOKEN'ı .env dosyasından alır
 
 admin=7457947976
 
