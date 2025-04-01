@@ -1,4 +1,4 @@
-import telebot,os
+
 import re,json
 import requests
 import telebot,time,random
