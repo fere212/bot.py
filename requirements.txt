@@ -6,3 +6,4 @@ beautifulsoup4
 colorama
 pyfiglet
 user-agent
+faker
