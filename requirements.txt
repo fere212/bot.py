@@ -7,3 +7,6 @@ colorama
 pyfiglet
 faker
 user-agent
+pip uninstall user-agent
+pip install fake_useragent
+
