@@ -23,8 +23,25 @@ import threading
 import time
 from telebot import types
 
-TOKEN = os.getenv("BOT_TOKEN")
-bot = Bot(token=TOKEN)
+from dotenv import load_dotenv  # dotenv modülünü içe aktar
+import os  # Sistem dosyalarına erişim için
+import telebot  # Telegram Bot kütüphanesi
+
+# .env dosyasını yükle
+load_dotenv()
+
+# .env dosyasındaki BOT_TOKEN'ı al
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+
+# BOT_TOKEN'ı kontrol et
+if BOT_TOKEN is None:
+    print("BOT_TOKEN çevresel değişkeni bulunamadı!")
+else:
+    print("Bot başarıyla başlatılacak.")
+
+# Botu başlat
+bot = telebot.TeleBot(BOT_TOKEN)
+
 
 
 admin=7457947976
